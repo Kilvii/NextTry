@@ -1,6 +1,9 @@
 package com.example.timink
 
 import androidx.lifecycle.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.LocalTime
@@ -18,11 +21,21 @@ class TaskViewModel(private val repository: TaskItemRepository): ViewModel()
         repository.updateTaskItem(taskItem)
     }
 
+    fun deleteTaskItem(taskItem: TaskItem) = viewModelScope.launch {
+        repository.deleteTaskItem(taskItem)
+        println(taskItems)
+    }
+
     fun setCompleted(taskItem: TaskItem) = viewModelScope.launch {
         if(!taskItem.isCompleted()){
             taskItem.completedDateString = TaskItem.dateFormatter.format(LocalDate.now())
         }
         repository.updateTaskItem(taskItem)
+        CoroutineScope(Dispatchers.IO).launch {
+            delay(1000L)
+            repository.deleteTaskItem(taskItem)
+        }
+
     }
 }
 

@@ -45,6 +45,9 @@ class NewTaskSheet(var taskItem: TaskItem?) : BottomSheetDialogFragment()
         binding.timePickerButton.setOnClickListener {
             openTimePicker()
         }
+        binding.deleteButton.setOnClickListener{
+            deleteAction()
+        }
     }
 
     private fun openTimePicker() {
@@ -90,6 +93,13 @@ class NewTaskSheet(var taskItem: TaskItem?) : BottomSheetDialogFragment()
         binding.name.setText("")
         binding.desc.setText("")
         dismiss()
+    }
+
+    private fun deleteAction(){
+        if (taskItem != null){
+            taskViewModel.deleteTaskItem(taskItem!!)
+            dismiss()
+        }
     }
 
 }
